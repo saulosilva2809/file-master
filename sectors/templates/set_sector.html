@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Definir Setor - {{ room.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-building"></i> Definir Setor para {{ room.name }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <!-- Tabs de navegação -->
+                    <ul class="nav nav-tabs mb-4" id="sectorTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="existing-tab" data-toggle="tab" href="#existing" role="tab">
+                                <i class="fas fa-list"></i> Selecionar Existente
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="new-tab" data-toggle="tab" href="#new" role="tab">
+                                <i class="fas fa-plus"></i> Criar Novo
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Conteúdo das tabs -->
+                    <div class="tab-content" id="sectorTabContent">
+                        <!-- Tab para selecionar setor existente -->
+                        <div class="tab-pane fade show active" id="existing" role="tabpanel">
+                            <form method="post" action="{% url 'set_sector_existing' room.pk %}" class="needs-validation py-4" novalidate>
+                                {% csrf_token %}
+                                <div class="form-group mb-4">
+                                    <label for="sector_select" class="h5 mb-3">Selecione um Setor:</label>
+                                    <select name="sector_id" id="sector_select" class="form-control form-control-lg" style="min-height: 50px;" required>
+                                        <option value="">Escolha um setor...</option>
+                                        {% for sector in sectors %}
+                                            <option value="{{ sector.id }}">{{ sector.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="text-muted mt-2">
+                                        <small><i class="fas fa-info-circle"></i> Selecione um setor existente para associar à sala</small>
+                                    </div>
+                                </div>
+                                <div class="mt-5 d-flex justify-content-between align-items-center">
+                                    <a href="{% url 'room_detail' room.pk %}" class="btn btn-secondary btn-lg">
+                                        <i class="fas fa-arrow-left"></i> Voltar
+                                    </a>
+                                    <div>
+                                        <button type="submit" class="btn btn-primary btn-lg">
+                                            <i class="fas fa-check"></i> Selecionar Setor
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Tab para criar novo setor -->
+                        <div class="tab-pane fade" id="new" role="tabpanel">
+                            <form method="post" class="needs-validation" novalidate>
+                                {% csrf_token %}
+                                {% for field in form %}
+                                    <div class="form-group">
+                                        {{ field.label_tag }}
+                                        {{ field }}
+                                        {% if field.help_text %}
+                                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                                        {% endif %}
+                                        {% if field.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                {{ field.errors|join:", " }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                                <div class="mt-4 d-flex justify-content-between">
+                                    <a href="{% url 'room_detail' room.pk %}" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-left"></i> Voltar
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Criar Novo Setor
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+// Validação do formulário
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+</script>
+{% endblock %} 

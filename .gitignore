@@ -1,0 +1,66 @@
+# Python/Django
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*.pyc
+.env
+.Python
+pip-log.txt
+.pytest_cache/
+db.sqlite3
+media/
+static/
+local_settings.py
+*.mo
+*.pot
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+bin/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+
+# Secrets e Configurações Sensíveis
+secrets/
+password.json
+*.pem
+*.key
+credentials.json
+.env.local
+.env.development
+.env.test
+.env.production
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+.project
+.pydevproject
+.settings/
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+*.bak
+
+# Logs e temporários
+*.log
+*.tmp
+logs/
+tmp/
+.coverage
+htmlcov/
+coverage.xml
+nosetests.xml 

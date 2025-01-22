@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ room.name }} - Documentos{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <!-- Cabeçalho -->
+                <div class="card-header bg-primary text-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-file-alt me-2 fa-lg"></i>
+                            <h5 class="mb-0">Documentos da Sala: {{ room.name }}</h5>
+                        </div>
+                        <div class="d-flex gap-2">
+                            {% if perms.documents.add_document %}
+                                <a href="{% url 'document_add' room.pk %}" class="btn btn-success">
+                                    <i class="fas fa-plus-circle me-2"></i>Novo Documento
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'room_detail' room.pk %}" class="btn btn-light">
+                                <i class="fas fa-arrow-left me-2"></i>Voltar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- Barra de Pesquisa -->
+                    <div class="mb-4">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="fas fa-search text-muted"></i>
+                            </span>
+                            <input type="text" id="search-documents" class="form-control border-start-0" placeholder="Buscar documentos...">
+                        </div>
+                    </div>
+
+                    <!-- Lista de Documentos -->
+                    <div class="documents-container">
+                        {% if documents %}
+                            {% for document in documents %}
+                                <div class="document-card mb-4 document-row">
+                                    <div class="row g-0">
+                                        <!-- Imagem do Documento -->
+                                        <div class="col-md-4 border-end">
+                                            <div class="p-3">
+                                                <img src="{{ document.photo.url }}" alt="{{ document.name }}" class="img-fluid rounded">
+                                            </div>
+                                        </div>
+
+                                        <!-- Detalhes do Documento -->
+                                        <div class="col-md-8">
+                                            <div class="p-3">
+                                                <h4 class="document-title mb-3">{{ document.name }}</h4>
+                                                
+                                                <div class="document-details mb-4">
+                                                    <div class="detail-item mb-2">
+                                                        <span class="detail-label">
+                                                            <i class="fas fa-folder me-2"></i>Categoria:
+                                                        </span>
+                                                        <span class="detail-value">
+                                                            {% for category in document.category.all %}
+                                                                <span class="badge bg-info text-dark">{{ category.name }}</span>
+                                                                {% if not forloop.last %}, {% endif %}
+                                                            {% endfor %}
+                                                        </span>
+                                                    </div>
+                                                    
+                                                    <div class="detail-item mb-2">
+                                                        <span class="detail-label">
+                                                            <i class="fas fa-user me-2"></i>Carregado por:
+                                                        </span>
+                                                        <span class="detail-value">{{ document.uploader.username }}</span>
+                                                    </div>
+                                                    
+                                                    <div class="detail-item mb-2">
+                                                        <span class="detail-label">
+                                                            <i class="fas fa-align-left me-2"></i>Descrição:
+                                                        </span>
+                                                        <span class="detail-value">{{ document.description }}</span>
+                                                    </div>
+                                                    
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">
+                                                            <i class="fas fa-calendar me-2"></i>Data de Upload:
+                                                        </span>
+                                                        <span class="detail-value">{{ document.date_upload|date:"d/m/Y H:i" }}</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="document-actions">
+                                                    {% if perms.documents.change_document %}
+                                                        <a href="{% url 'document_edit' document.pk room.pk %}" class="btn btn-warning">
+                                                            <i class="fas fa-edit me-2"></i>Editar
+                                                        </a>
+                                                    {% endif %}
+                                                    
+                                                    {% if perms.documents.delete_document %}
+                                                        <a href="{% url 'document_delete' document.pk room.pk %}" class="btn btn-danger">
+                                                            <i class="fas fa-trash-alt me-2"></i>Deletar
+                                                        </a>
+                                                    {% endif %}
+                                                    
+                                                    {% if perms.documents.view_document %}
+                                                        <a href="{% url 'document_download' document.pk room.pk %}" class="btn btn-info">
+                                                            <i class="fas fa-download me-2"></i>Baixar
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="alert alert-info">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <p class="mb-0">Nenhum documento encontrado</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .document-card {
+        border: 1px solid var(--gray-200);
+        border-radius: 0.5rem;
+        background-color: white;
+        transition: all 0.3s ease;
+    }
+
+    .document-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .document-title {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: var(--gray-600);
+        min-width: 120px;
+        display: inline-block;
+    }
+
+    .detail-value {
+        color: var(--gray-800);
+    }
+
+    .document-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .document-actions .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 120px;
+    }
+
+    @media (max-width: 768px) {
+        .border-end {
+            border-right: none !important;
+            border-bottom: 1px solid var(--gray-200);
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-documents');
+    const rows = document.querySelectorAll('.document-row');
+
+    searchInput.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+
+        rows.forEach(row => {
+            const title = row.querySelector('.document-title').textContent.toLowerCase();
+            const description = row.querySelector('.detail-value').textContent.toLowerCase();
+            const categories = Array.from(row.querySelectorAll('.badge'))
+                .map(badge => badge.textContent.toLowerCase());
+
+            if (title.includes(searchTerm) || 
+                description.includes(searchTerm) || 
+                categories.some(category => category.includes(searchTerm))) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

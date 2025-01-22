@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}Página Não Encontrada - 404{% endblock %}
+
+{% block content %}
+<div class="error-container fade-in">
+    <style>
+        .error-container {
+            text-align: center;
+            padding: 3rem 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .error-icon {
+            font-size: 4rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .error-code {
+            font-size: 8rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            line-height: 1;
+            margin-bottom: 1rem;
+            opacity: 0.1;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        .error-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .error-message {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .error-actions .btn {
+            min-width: 160px;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        @media (max-width: 768px) {
+            .error-container {
+                padding: 2rem 1rem;
+            }
+
+            .error-code {
+                font-size: 6rem;
+            }
+
+            .error-title {
+                font-size: 1.75rem;
+            }
+
+            .error-message {
+                font-size: 1rem;
+            }
+        }
+    </style>
+
+    <div class="error-icon">
+        <i class="fas fa-map-signs"></i>
+    </div>
+
+    <div class="error-code">404</div>
+
+    <h1 class="error-title">Página Não Encontrada</h1>
+
+    <p class="error-message">
+        A página que você está procurando não existe ou foi movida.
+        Verifique o endereço digitado ou utilize os botões abaixo para navegar.
+    </p>
+
+    <div class="error-actions">
+        <a href="{% url 'home' %}" class="btn btn-primary">
+            <i class="fas fa-home"></i>
+            Voltar ao Início
+        </a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'my_rooms' %}" class="btn btn-outline">
+                <i class="fas fa-folder"></i>
+                Minhas Salas
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,23 @@
+-r requirements.txt
+
+# Ferramentas de Desenvolvimento
+black==24.2.0
+flake8==7.0.0
+isort==5.13.2
+mypy==1.8.0
+pytest==8.0.0
+pytest-django==4.8.0
+pytest-cov==4.1.0
+coverage==7.4.1
+
+# Debug
+django-debug-toolbar==4.3.0
+ipython==8.21.0
+
+# Documentação
+Sphinx==7.2.6
+sphinx-rtd-theme==2.0.0
+
+# Segurança
+bandit==1.7.7
+safety==2.3.5 

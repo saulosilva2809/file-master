@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}File Master - Início{% endblock %}
+
+{% block content %}
+<section class="hero fade-in">
+    <style>
+        .hero {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .dashboard-card {
+            background: var(--white);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-text {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .gap-3 {
+            gap: 1rem;
+        }
+    </style>
+
+    <h1>Sistema de Gerenciamento Documental</h1>
+    <p>Acesse, organize e gerencie os documentos da empresa de forma segura e eficiente.</p>
+    
+    {% if user.is_authenticated %}
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'connect_room' %}" class="btn btn-primary">
+                <i class="fas fa-door-open"></i> Acessar Sala
+            </a>
+            <a href="{% url 'create_room_password_access' %}" class="btn btn-outline">
+                <i class="fas fa-plus"></i> Nova Sala
+            </a>
+        </div>
+    {% else %}
+        <a href="{% url 'login' %}" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt"></i> Acessar Sistema
+        </a>
+    {% endif %}
+</section>
+
+<div class="dashboard-grid">
+    <div class="dashboard-card">
+        <div class="card-icon" style="background-color: rgba(11, 79, 157, 0.1); color: var(--primary-color);">
+            <i class="fas fa-folder-open"></i>
+        </div>
+        <h3 class="card-title">Salas Virtuais</h3>
+        <p class="card-text">Organize documentos em salas específicas para cada setor ou departamento da empresa.</p>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="card-icon" style="background-color: rgba(227, 30, 36, 0.1); color: var(--secondary-color);">
+            <i class="fas fa-shield-alt"></i>
+        </div>
+        <h3 class="card-title">Controle de Acesso</h3>
+        <p class="card-text">Gerencie permissões de usuários e mantenha seus documentos seguros.</p>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="card-icon" style="background-color: rgba(253, 185, 19, 0.1); color: var(--accent-color);">
+            <i class="fas fa-search"></i>
+        </div>
+        <h3 class="card-title">Busca Rápida</h3>
+        <p class="card-text">Encontre documentos facilmente com nossa ferramenta de busca avançada.</p>
+    </div>
+</div>
+{% endblock %}

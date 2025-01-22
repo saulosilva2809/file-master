@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Minhas Salas{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Minhas Salas</h2>
+    {% if rooms %}
+        <ul class="list-group">
+            {% for room in rooms %}
+                <li class="list-group-item">
+                    <a href="{% url 'room_detail' room.id %}">{{ room.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-warning" role="alert">
+            Você não está em nenhuma sala no momento.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

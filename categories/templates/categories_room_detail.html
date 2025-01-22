@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block title %}Categorias na Sala{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    .categories-section {
+        padding: 2rem;
+    }
+
+    .categories-title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    .categories-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .category-item {
+        padding: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 0.5rem;
+        background: #f8f9fa;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .category-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .category-name {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: var(--primary-color);
+    }
+
+    .category-description {
+        margin-bottom: 1rem;
+        color: var(--text-light);
+    }
+
+    .category-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .category-actions .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 100px;
+        transition: all 0.2s ease;
+    }
+
+    .category-actions .btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .no-categories {
+        padding: 2rem;
+        text-align: center;
+        background: #f8f9fa;
+        border-radius: 0.5rem;
+        color: var(--text-light);
+    }
+
+    .detail-label {
+        font-weight: bold;
+        margin-right: 0.5rem;
+        color: var(--text-dark);
+    }
+
+    .detail-value {
+        font-style: italic;
+        color: var(--text-light);
+    }
+
+    .add-category-btn {
+        margin-top: 1rem;
+    }
+
+    .no-permission-alert {
+        background-color: #fff3cd;
+        color: #856404;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+</style>
+
+<div class="tab-pane fade show active" id="categories" role="tabpanel" aria-labelledby="categories-tab">
+    <div class="categories-section">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="categories-title mb-0">
+                <i class="fas fa-folder-open me-2"></i>Categorias
+            </h3>
+            {% if can_add %}
+                <a href="{% url 'category_add' room.pk %}" class="btn btn-success">
+                    <i class="fas fa-plus-circle me-2"></i>Nova Categoria
+                </a>
+            {% endif %}
+        </div>
+
+        {% if not perms.categories.view_category %}
+            <div class="no-permission-alert">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Você não tem permissão para visualizar as categorias desta sala.</span>
+            </div>
+        {% else %}
+            <div class="categories-container">
+                {% if categories %}
+                    {% for category in categories %}
+                        <div class="category-item">
+                            <h4 class="category-name">{{ category.name }}</h4>
+                            <div class="category-description">
+                                <span class="detail-label">
+                                    <i class="fas fa-align-left"></i>
+                                    Descrição:
+                                </span>
+                                <span class="detail-value">{{ category.description }}</span>
+                            </div>
+                            <div class="category-actions">
+                                {% if can_change %}
+                                    <a href="{% url 'category_edit' category.pk room.pk %}" class="btn btn-warning">
+                                        <i class="fas fa-edit me-2"></i>Editar
+                                    </a>
+                                {% endif %}
+                                {% if can_delete %}
+                                    <a href="{% url 'category_delete' category.pk room.pk %}" class="btn btn-danger">
+                                        <i class="fas fa-trash-alt me-2"></i>Deletar
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-categories">
+                        <i class="fas fa-folder-open fa-3x mb-3 text-muted"></i>
+                        <h4>Nenhuma categoria encontrada</h4>
+                        <p class="text-muted">
+                            {% if can_add %}
+                                Clique no botão "Nova Categoria" para começar.
+                            {% else %}
+                                Aguarde até que uma categoria seja criada.
+                            {% endif %}
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

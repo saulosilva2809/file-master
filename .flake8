@@ -1,0 +1,12 @@
+[flake8]
+exclude =
+    accounts/migrations/,
+    categories/migrations/,
+    documents/migrations/,
+    .venv/,
+    manage.py,
+    settings.py
+
+ignore = 
+        E713
+        W504

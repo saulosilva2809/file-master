@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Conectar à Sala{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2 class="mb-4">Conectar à Sala: {{ room.name }}</h2>
+        
+        {% if messages %}
+            <div class="alert alert-success">
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="room_name">Nome da Sala</label>
+                <input type="text" class="form-control" id="room_name" name="room_name" placeholder="Digite o nome da sala" required>
+                <br>
+                <label for="room_password">Senha da Sala</label>
+                <input type="password" class="form-control" id="room_password" name="room_password" placeholder="Digite o nome da sala" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Entrar na Sala</button>
+        </form>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Definir Cargo - {{ room.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-tag"></i> Definir Cargo para {{ selected_user.username }}
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="user-info mb-4">
+                        <div class="d-flex align-items-center">
+                            <div class="user-avatar me-3" style="width: 50px; height: 50px; border-radius: 50%; background-color: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold;">
+                                {{ selected_user.username|make_list|first|upper }}
+                            </div>
+                            <div>
+                                <h5 class="mb-1">{{ selected_user.username }}</h5>
+                                {% if selected_user == room.owner %}
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="fas fa-crown"></i> Proprietário
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        <div class="form-group mb-4">
+                            <label for="position_select" class="h5 mb-3">Selecione um Cargo:</label>
+                            <select name="position_id" id="position_select" class="form-control form-control-lg" style="min-height: 50px;" required>
+                                <option value="">Escolha um cargo...</option>
+                                {% for position in positions %}
+                                    <option value="{{ position.id }}">{{ position.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="text-muted mt-2">
+                                <small><i class="fas fa-info-circle"></i> Selecione um cargo para este usuário</small>
+                            </div>
+                        </div>
+
+                        {% if selected_user.positions.all %}
+                            <div class="alert alert-info mb-4">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Cargo atual do usuário: 
+                                {% for position in selected_user.positions.all %}
+                                    {% if position in positions %}
+                                        <strong>{{ position.name }}</strong>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{% url 'room_detail' room.pk %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Voltar
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save me-2"></i>Definir Cargo
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-4" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Validação do formulário
+    var forms = document.querySelectorAll('.needs-validation');
+    Array.prototype.slice.call(forms).forEach(function(form) {
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+});
+</script>
+{% endblock %} 

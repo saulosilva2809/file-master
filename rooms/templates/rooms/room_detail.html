@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ room.name }} - Detalhes da Sala{% endblock %}
+
+{% block content %}
+
+{% include 'components/_style.html' %}
+
+<div class="room-container fade-in">
+    <div class="room-header">
+        <div class="room-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+            </svg>
+        </div>
+        <div class="room-title">
+            <h2>{{ room.name }}</h2>
+            <p class="room-owner">Criado por {{ room.owner.username }}</p>
+        </div>
+
+        {% if perms.sectors.add_sector %}
+            {% if not room.sector %}
+                <a href="{% url 'set_sector' room.pk %}" class="btn btn-primary btn-sm mt-2" id="btn-set-sector">
+                    <i class="fas fa-building"></i> Definir Setor
+                </a>
+            {% else %}
+            {% endif %}
+        {% endif %}
+            
+            <span class="badge bg-info">
+                <a href="{% url 'set_sector' room.pk %}" style="color: #FFFFFF;">
+                    <i class="fas fa-building"></i> {{ room.sector.name }}
+                </a>
+            </span>
+            <div class="btn-group ms-2">
+                {% if perms.positions.view_position %}
+                    <a href="{% url 'list_positions_room' room.pk %}" class="btn btn-info btn-sm">
+                        <i class="fas fa-users"></i> Cargos
+                    </a>
+                {% endif %}
+
+                {% if perms.positions.add_position %}
+                    <a href="{% url 'add_position_room' room.pk %}" class="btn btn-success btn-sm">
+                        <i class="fas fa-user-plus"></i> Adicionar Cargo
+                    </a>
+                {% endif %}
+            </div>
+    </div>
+
+    <!--TABS -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="users-tab" data-toggle="tab" href="#users" role="tab" aria-controls="users" aria-selected="true">Usuários</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="categories-tab" data-toggle="tab" href="#categories" role="tab" aria-controls="categories" aria-selected="false">Categorias</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="documents-tab" data-toggle="tab" href="#documents" role="tab" aria-controls="documents" aria-selected="false">Documentos</a>
+        </li>
+    </ul>
+
+    {% include 'components/_tabusers.html' %}
+    {% include 'components/_tabcategories.html' %}
+    {% include 'components/_tabdocuments.html' %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Tab switching
+        $('#myTab a[data-toggle="tab"]').on('click', function (e) {
+            e.preventDefault()
+            $(this).tab('show')
+        });
+
+        // Document search functionality
+        const searchInput = document.getElementById('document-search');
+        const documentItems = document.querySelectorAll('.document-item');
+
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+
+            documentItems.forEach(item => {
+                const title = item.querySelector('.document-title').textContent.toLowerCase();
+                const description = item.querySelector('.document-details').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

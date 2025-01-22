@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Excluir Documento{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Confirmar Exclusão</h2>
+    <p>Você tem certeza de que deseja excluir o documento <strong>{{ document.name }}</strong>?</p>
+    <div class="document-actions mt-4">
+        <form method="post" action="{% url 'document_delete' document.pk room.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Excluir Documento</button>
+            <a href="{% url 'document_detail' document.pk room.pk %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

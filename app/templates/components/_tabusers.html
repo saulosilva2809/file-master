@@ -1,0 +1,175 @@
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab">
+        <div class="users-section">
+            <h3 class="users-title mb-4">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                </svg>
+                Usuários na Sala
+            </h3>
+            <input type="text" id="userFilter" placeholder="Filtrar usuários..." class="form-control mb-4">
+            <style>
+                .users-list {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+                    gap: 1.5rem;
+                }
+                .user-item {
+                    background: white;
+                    border-radius: 8px;
+                    padding: 1.5rem;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                    transition: all 0.3s ease;
+                    height: 100%;
+                }
+                .user-item:hover {
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                    transform: translateY(-2px);
+                }
+                .user-content {
+                    display: flex;
+                    align-items: center;
+                }
+                .user-avatar {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    background-color: var(--primary-color);
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.2rem;
+                    font-weight: bold;
+                    margin-right: 1.5rem;
+                }
+                .user-details {
+                    flex-grow: 1;
+                }
+                .user-name {
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    color: var(--text-dark);
+                    margin-bottom: 0.5rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                }
+                .owner-icon {
+                    color: var(--accent-color);
+                    font-size: 1.2rem;
+                    display: inline-flex;
+                    align-items: center;
+                }
+                .owner-icon:hover::after {
+                    content: 'Proprietário';
+                    position: absolute;
+                    background: var(--text-dark);
+                    color: white;
+                    padding: 0.25rem 0.5rem;
+                    border-radius: 4px;
+                    font-size: 0.75rem;
+                    margin-top: -25px;
+                    margin-left: 25px;
+                }
+                .user-position {
+                    color: var(--text-light);
+                    font-size: 0.95rem;
+                }
+                .user-actions {
+                    margin-top: 1rem;
+                    padding-top: 1rem;
+                    border-top: 1px solid var(--gray-200);
+                    display: flex;
+                    justify-content: flex-end;
+                    gap: 0.75rem;
+                }
+                .btn-set-position {
+                    padding: 0.5rem 1.25rem;
+                    font-size: 0.95rem;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+                .btn-remove-user {
+                    padding: 0.5rem 1.25rem;
+                    font-size: 0.95rem;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+                .btn-set-position:hover, .btn-remove-user:hover {
+                    transform: translateY(-1px);
+                }
+                @media (max-width: 768px) {
+                    .users-list {
+                        grid-template-columns: 1fr;
+                    }
+                }
+            </style>
+            <ul class="users-list" id="usersList">
+                {% for user in room.users.all %}
+                    <li class="user-item">
+                        <div class="user-content">
+                            <div class="user-avatar">
+                                {{ user.username|make_list|first|upper }}
+                            </div>
+                            <div class="user-details">
+                                <div class="user-name">
+                                    
+                                        <a href="{% url 'list_perms_room' room.pk %}" class="user-permissions-link">{{ user.username }}</a>
+                                    {% if user == room.owner %}
+                                        <div class="owner-icon" title="Proprietário">
+                                            <i class="fas fa-crown"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                {% if user.position %}
+                                    <div class="user-position">
+                                        <i class="fas fa-briefcase me-2"></i>
+                                        {{ user.position.name }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="user-actions">
+                            {% if user.position and perms.positions.add_position %}
+                                <a href="{% url 'set_position_from_user' room.pk user.pk %}" class="btn btn-primary btn-set-position">
+                                    <i class="fas fa-user-tag"></i>
+                                    Alterar Cargo
+                                </a>
+                                <a href="{% url 'remove_positions_from_user' room.pk user.pk %}" class="btn btn-warning btn-remove-position">
+                                    <i class="fas fa-user-slash"></i>
+                                    Remover Cargo
+                                </a>
+                            {% elif perms.positions.add_position %}
+                                <a href="{% url 'set_position_from_user' room.pk user.pk %}" class="btn btn-success btn-set-position">
+                                    <i class="fas fa-user-plus"></i>
+                                    Adicionar Cargo
+                                </a>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+<script>
+    document.getElementById('userFilter').addEventListener('input', function() {
+        var filter = this.value.toLowerCase();
+        var users = document.querySelectorAll('.user-item');
+        
+        users.forEach(function(user) {
+            var username = user.querySelector('.user-name').textContent.toLowerCase();
+            if (username.includes(filter)) {
+                user.style.display = '';
+            } else {
+                user.style.display = 'none';
+            }
+        });
+    });
+</script>

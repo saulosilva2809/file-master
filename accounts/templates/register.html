@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block title %}Registrar - File Master{% endblock %}
+
+{% block content %}
+<style>
+    .register-container {
+        max-width: 500px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: var(--white);
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .register-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .register-header h2 {
+        color: var(--text-dark);
+        font-size: 1.875rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .register-header p {
+        color: var(--text-light);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-dark);
+        font-weight: 500;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #E5E7EB;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        transition: all 0.2s;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .help-text {
+        font-size: 0.875rem;
+        color: var(--text-light);
+        margin-top: 0.5rem;
+    }
+
+    .error-text {
+        color: #DC2626;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+
+    .register-button {
+        width: 100%;
+        padding: 0.75rem;
+        background: var(--primary-color);
+        color: var(--white);
+        border: none;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 1rem;
+    }
+
+    .register-button:hover {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+    }
+
+    .register-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #E5E7EB;
+    }
+
+    .register-footer a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .register-footer a:hover {
+        text-decoration: underline;
+    }
+
+    ul.errorlist {
+        color: #DC2626;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        list-style: none;
+        padding: 0;
+    }
+</style>
+
+<div class="register-container fade-in">
+    <div class="register-header">
+        <h2>Criar Conta</h2>
+        <p>Registre-se para começar a usar o File Master</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <div class="help-text">{{ field.help_text }}</div>
+                {% endif %}
+                {% if field.errors %}
+                    <ul class="errorlist">
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="register-button">
+            Criar Conta
+        </button>
+    </form>
+
+    <div class="register-footer">
+        <p>Já tem uma conta? <a href="{% url 'login' %}">Entrar</a></p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Renomear e Baixar Arquivo{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Renomear e Baixar Arquivo</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="new_filename">Novo Nome do Arquivo</label>
+            <input type="text" class="form-control" id="new_filename" name="new_filename" placeholder="Digite o novo nome para o arquivo" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Baixar</button>
+        <a href="{% url 'room_detail' room.pk %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

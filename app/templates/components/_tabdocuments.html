@@ -1,0 +1,346 @@
+{% load document_extras %}
+
+<div class="tab-pane fade" id="documents" role="tabpanel" aria-labelledby="documents-tab">
+    <div class="documents-section">
+        <div class="section-header mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="section-title mb-0">
+                    <i class="fas fa-file-alt me-2"></i>Documentos
+                </h3>
+                {% if perms.documents.add_document %}
+                    <a href="{% url 'document_add' room.pk %}" class="btn btn-success">
+                        <i class="fas fa-plus-circle me-2"></i>Novo Documento
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if not perms.documents.view_document %}
+            <div class="alert-custom warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Você não tem permissão para visualizar os documentos desta sala.</span>
+            </div>
+        {% else %}
+            <div class="items-grid">
+                {% if room.documents.all %}
+                    {% for document in room.documents.all %}
+                        <div class="item-card">
+                            <div class="card-header">
+                                <div class="card-icon">
+                                    <i class="fas fa-file"></i>
+                                </div>
+                                <h4 class="card-title">{{ document.name }}</h4>
+                            </div>
+                            
+                            <div class="card-body">
+                                <div class="preview-block mb-3">
+                                    {% with ext=document.photo.url|file_extension %}
+                                        {% if ext == '.jpg' or ext == '.jpeg' or ext == '.png' %}
+                                            <img src="{{ document.photo.url }}" alt="{{ document.name }}" class="preview-img">
+                                        {% elif ext == '.pdf' %}
+                                            <div class="preview-icon pdf">
+                                                <i class="fas fa-file-pdf"></i>
+                                                <span>PDF</span>
+                                            </div>
+                                        {% elif ext == '.mp3' %}
+                                            <div class="preview-icon audio">
+                                                <i class="fas fa-file-audio"></i>
+                                                <span>Audio</span>
+                                            </div>
+                                        {% else %}
+                                            <div class="preview-icon generic">
+                                                <i class="fas fa-file"></i>
+                                                <span>Arquivo</span>
+                                            </div>
+                                        {% endif %}
+                                    {% endwith %}
+                                </div>
+
+                                <div class="description-block">
+                                    <span class="label">
+                                        <i class="fas fa-align-left me-2"></i>Descrição:
+                                    </span>
+                                    <p class="description">{{ document.description }}</p>
+                                </div>
+
+                                <div class="meta-info">
+                                    <div class="meta-item">
+                                        <i class="fas fa-user me-2"></i>
+                                        <span>{{ document.uploader.username }}</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-calendar-alt me-2"></i>
+                                        <span>{{ document.date_upload|date:"d/m/Y H:i" }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-actions">
+                                {% if perms.documents.view_document %}
+                                    <a href="{% url 'document_download' document.pk room.pk %}" class="btn btn-info">
+                                        <i class="fas fa-download me-2"></i>Baixar
+                                    </a>
+                                {% endif %}
+                                {% if perms.documents.change_document %}
+                                    <a href="{% url 'document_edit' document.pk room.pk %}" class="btn btn-warning">
+                                        <i class="fas fa-edit me-2"></i>Editar
+                                    </a>
+                                {% endif %}
+                                {% if perms.documents.delete_document %}
+                                    <a href="{% url 'document_delete' document.pk room.pk %}" class="btn btn-danger">
+                                        <i class="fas fa-trash-alt me-2"></i>Deletar
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h4>Nenhum documento encontrado</h4>
+                        <p>
+                            {% if perms.documents.add_document %}
+                                Clique no botão "Novo Documento" para começar.
+                            {% else %}
+                                Aguarde até que um documento seja adicionado.
+                            {% endif %}
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .documents-section {
+        padding: 0;
+    }
+
+    .section-header {
+        background: var(--white);
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    .items-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        padding: 0.5rem;
+    }
+
+    .item-card {
+        background: var(--white);
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+
+    .item-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+        padding: 1.5rem;
+        background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .card-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    .card-title {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        line-height: 1.3;
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .preview-block {
+        background: var(--light);
+        border-radius: 0.5rem;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+    }
+
+    .preview-img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .preview-icon {
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .preview-icon i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--gray-600);
+    }
+
+    .preview-icon.pdf i {
+        color: #dc3545;
+    }
+
+    .preview-icon.audio i {
+        color: #0dcaf0;
+    }
+
+    .preview-icon span {
+        display: block;
+        color: var(--gray-600);
+        font-size: 0.875rem;
+    }
+
+    .description-block {
+        margin: 1.5rem 0;
+    }
+
+    .label {
+        display: block;
+        font-weight: 600;
+        color: var(--gray-700);
+        margin-bottom: 0.5rem;
+    }
+
+    .description {
+        color: var(--gray-600);
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .meta-info {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--gray-200);
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        color: var(--gray-600);
+        font-size: 0.875rem;
+    }
+
+    .card-actions {
+        padding: 1rem 1.5rem;
+        background: var(--light);
+        display: flex;
+        gap: 0.75rem;
+        border-top: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .card-actions .btn {
+        flex: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background: var(--white);
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        grid-column: 1 / -1;
+    }
+
+    .empty-icon {
+        width: 80px;
+        height: 80px;
+        background: var(--light);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: var(--gray-500);
+        margin: 0 auto 1.5rem;
+    }
+
+    .empty-state h4 {
+        color: var(--gray-700);
+        margin-bottom: 0.75rem;
+    }
+
+    .empty-state p {
+        color: var(--gray-600);
+        margin: 0;
+    }
+
+    .alert-custom {
+        padding: 1rem 1.5rem;
+        border-radius: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+    }
+
+    .alert-custom.warning {
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeeba;
+    }
+
+    @media (max-width: 768px) {
+        .items-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .meta-info {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .card-actions {
+            flex-direction: column;
+        }
+    }
+</style>
