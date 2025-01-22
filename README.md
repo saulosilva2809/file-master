@@ -1,6 +1,6 @@
 # FileMaster
 
-Sistema de gerenciamento documental desenvolvido para a Viação Pirajuçara, permitindo organização e controle de documentos em salas virtuais com diferentes níveis de permissões.
+Sistema de gerenciamento documental desenvolvido, permitindo organização e controle de documentos em salas virtuais com diferentes níveis de permissões.
 
 ## 🚀 Funcionalidades
 
@@ -146,7 +146,7 @@ filemaster/
 
 ## ✒️ Autores
 
-* **Seu Nome** - *Desenvolvimento* - [saulo](https://github.com/saulosilva2809/)
+* **Saulo Emmanuel** - *Desenvolvimento* - [saulo](https://github.com/saulosilva2809/)
 
 ## 📌 Versão
 
