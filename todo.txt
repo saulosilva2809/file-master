@@ -1,3 +1,1 @@
-#TODO: terminar de usar o flake8
-#TODO: crie o .gitignore
-#TODO: fazer deploy
+
