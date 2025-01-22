@@ -1,10 +1,9 @@
 # File Master
 
-<<<<<<< HEAD
+
 Sistema de gerenciamento documental que oferece as seguintes funcionalidades:
 =======
 Sistema de gerenciamento documental desenvolvido, permitindo organização e controle de documentos em salas virtuais com diferentes níveis de permissões.
->>>>>>> 98f9264f24ddfca3c8aef87fda26cd7dbcf69779
 
 ## Funcionalidades
 
