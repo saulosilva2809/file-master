@@ -3,7 +3,32 @@
 Sistema de gerenciamento documental que oferece as seguintes funcionalidades:
 
 ## Funcionalidades
+## Funcionalidades
 
+### Gestão de Salas
+- Criação de salas virtuais para organização de documentos
+- Gerenciamento de permissões por sala
+- Visualização de salas disponíveis
+- Acesso rápido às suas salas
+
+### Gestão de Documentos
+- Upload de documentos
+- Visualização de documentos
+- Download de documentos
+- Organização por categorias
+- Controle de versões
+
+### Controle de Acesso
+- Sistema de login seguro
+- Níveis de permissão personalizados
+- Controle de acesso por usuário
+- Registro de atividades
+
+### Recursos Adicionais
+- Interface intuitiva e responsiva
+- Sistema de busca de documentos
+- Visualização de histórico de alterações
+- Suporte a múltiplos formatos de arquivo
 ### Gestão de Salas
 - Criação de salas virtuais para organização de documentos
 - Gerenciamento de permissões por sala
