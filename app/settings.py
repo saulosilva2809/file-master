@@ -21,11 +21,7 @@ SECRET_KEY = env('SECRET_KEY')
 # AVISO DE SEGURANÇA: não execute com depuração ativada em produção!
 DEBUG = env.bool('DEBUG', default=False)
 
-ALLOWED_HOSTS = ['filemaster-wispy-shape-3909.fly.dev', 'localhost']
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://filemaster-wispy-shape-3909.fly.dev',
-]
+ALLOWED_HOSTS = ['*']
 
 # Definição da aplicação
 INSTALLED_APPS = [

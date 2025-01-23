@@ -19,7 +19,7 @@ def permission_access_app(request):
             request.session['is_authorized'] = True
             return redirect('home')
         else:
-            messages.error('Senha inválida!')
+            messages.error(request, 'Senha inválida!')
 
     return render(request, 'permission_access_app.html')
 

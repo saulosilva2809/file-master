@@ -38,7 +38,6 @@ credentials.json
 .env.development
 .env.test
 .env.production
-fly.toml
 
 # IDE
 .idea/
